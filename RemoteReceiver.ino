@@ -16,6 +16,11 @@ char  received_packet[50];
 char print_pkt[100];
 uint32_t to_print_cntr = 0;
 
+enum 
+{
+  LED_on,
+  LED_off
+}stat_flag;
 
 /*************Functions*************/
 void rx_int(int data_size)
@@ -43,7 +48,7 @@ void rx_int(int data_size)
     Serial.print(print_pkt);
     Serial.println();
     to_print_cntr = 0;
-    blink(20, 1);
+    stat_flag = LED_on;
   }
   else
   {
@@ -120,6 +125,11 @@ void loop()
     to_print_cntr = 0;
     LoRa.read(); //flush 
     Serial.println("no data"); 
+  }
+  if(stat_flag == LED_on)
+  {
+    stat_flag = LED_off;
+    blink(20, 5);
   }
 }
 
