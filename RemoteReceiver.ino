@@ -2,7 +2,9 @@
 //#include <SPI.h>
 #include <LoRa.h>
 #include "stdio.h"
+#include "stdint.h"
 #include "string.h"
+#include "pins_arduino.h"
 
 /*************Functions*************/
 void blink (uint32_t del, uint32_t times)
@@ -28,6 +30,8 @@ int Xaxis = A0;    // select the input pin for the Xaxis Joystick
 int Yaxis = A1;    // select the input pin for the Yazis Joystick
 uint32_t XValue = 0, YValue = 0;    // analog values of axis accordingly 
 char  Buff[20];
+char  received_packet[50];
+char print_pkt[100];
 
 /*************Initializations*************/
 void setup() 
@@ -62,6 +66,7 @@ void setup()
   delay(300);
 }
 
+uint32_t to_print_cntr = 0;
 void loop()
 {
   // try to parse packet
@@ -71,18 +76,31 @@ void loop()
     // received a packet
     Serial.println("Received packet: ");
 
+    char * received_packet_ptr = received_packet;
     // read packet
     while (LoRa.available()) {
-      Serial.print((char)LoRa.read());
+      *received_packet_ptr++ = (char)LoRa.read();
     }
-    // print RSSI of packet
-    char data_pkt[100];
+    *received_packet_ptr = '\0'; //terminator
 
-    sprintf(data_pkt, "signal strength is: %d dbm", LoRa.packetRssi());
-    Serial.print(data_pkt);
+    // print RSSI of packet
+    Serial.print(received_packet);
+        
+    sprintf(print_pkt, "signal strength is: %d dbm", LoRa.packetRssi());
+    Serial.print(print_pkt);
     Serial.println();
 
-    blink(20, 5);
+    blink(20, 1);
+    to_print_cntr = 0;
   }
+  else
+  {
+    if(to_print_cntr++ > 10000)
+    {
+      to_print_cntr = 0;
+      Serial.println("no data");
+    }
+  }
+  
 }
 
