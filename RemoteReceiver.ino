@@ -72,11 +72,20 @@ void rx_int(int data_size)
     Serial.println("Received packet: ");
 
     char * received_packet_ptr = received_packet;
+    char * packet_counter = received_packet;
     // read packet
     while (LoRa.available()) {
       *received_packet_ptr++ = (char)LoRa.read();
+      
+      //to prevent writing data out of defined space
+      if(received_packet_ptr - packet_counter > sizeof(received_packet))
+        break;  
     }
-    *received_packet_ptr = '\0'; //terminator
+    received_packet_ptr = strchr(received_packet, '\n');
+
+    if(received_packet_ptr != 0)
+      *++received_packet_ptr = '\0'; //terminator
+
 
     LoRa.read(); //flush 
 
