@@ -26,6 +26,8 @@
 #define pin_out9      17
 #define pin_out10     16
 #define pin_out11     15
+#define pin_outANL    44
+
 
 //declare outputs
 #define motor1_l_u            pin_out1        //motor1 left up 
@@ -115,7 +117,7 @@ void blink (uint32_t del, uint32_t times)
   {
     digitalWrite(LED_BUILTIN, HIGH);
     delay(del);
-    digitalWrite(LED_BUILTIN, HIGH);
+    digitalWrite(LED_BUILTIN, LOW);
     delay(del);
   }
 }
@@ -195,78 +197,119 @@ static inline void reset_motor2(void)
 
 void reset_motors(void)
 {
-  digitalWrite(motor2_l_d, HIGH);
-  digitalWrite(motor2_l_u, HIGH);
-  digitalWrite(motor2_r_d, HIGH);
-  digitalWrite(motor2_r_u, HIGH);
+  // digitalWrite(motor2_l_d, HIGH);
+  // digitalWrite(motor2_l_u, HIGH);
+  // digitalWrite(motor2_r_d, HIGH);
+  // digitalWrite(motor2_r_u, HIGH);
 
-  digitalWrite(motor1_l_d, HIGH);
-  digitalWrite(motor1_l_u, HIGH);
-  digitalWrite(motor1_r_d, HIGH);
-  digitalWrite(motor1_r_u, HIGH);
+  // digitalWrite(motor1_l_d, HIGH);
+  // digitalWrite(motor1_l_u, HIGH);
+  // digitalWrite(motor1_r_d, HIGH);
+  // digitalWrite(motor1_r_u, HIGH);
+
+  digitalWrite(pin_out1, HIGH);
+  digitalWrite(pin_out2, HIGH);
+  digitalWrite(pin_out3, HIGH);
+  digitalWrite(pin_out4, HIGH);
+  digitalWrite(pin_out5, HIGH);
+  digitalWrite(pin_out6, HIGH);
+  digitalWrite(pin_out7, HIGH);
+  digitalWrite(pin_out8, HIGH);
 }
 
 
-void move_forward(void)
+void move_forward(uint8_t analoge_value)
 {
-  set_motor1_forward();
-  set_motor2_forward();
+  digitalWrite(pin_out1, LOW); // activation coil enable
+  analogWrite(pin_outANL, analoge_value);
+  // set_motor1_forward();
+  // set_motor2_forward();
 }
 
-void move_backward(void)
+void reset_move_forward(void)
 {
-  set_motor1_backward();
-  set_motor2_backward();
+  digitalWrite(pin_out1, HIGH); // activation coil disable
+  analogWrite(pin_outANL, 0);
+  // set_motor1_forward();
+  // set_motor2_forward();
+}
+
+void move_backward(uint8_t analoge_value)
+{
+  digitalWrite(pin_out2, LOW); // safety pin activation
+  digitalWrite(pin_out1, LOW); // activation coil enable
+  analogWrite(pin_outANL, analoge_value);
+  // set_motor1_backward();
+  // set_motor2_backward();
+}
+
+void reset_move_backward(void)
+{
+  digitalWrite(pin_out2, HIGH); // safety pin deactivation
+  digitalWrite(pin_out1, HIGH); // activation coil disable
+  analogWrite(pin_outANL, 0);
+  // set_motor1_backward();
+  // set_motor2_backward();
 }
 
 void move_right(void)
 {
-  reset_motor2();
-  set_motor1_forward();
+  digitalWrite(pin_out3, LOW);
+  // reset_motor2();
+  // set_motor1_forward();
 }
 
 void move_left(void)
 {
-  reset_motor1();
-  set_motor2_forward();
+  digitalWrite(pin_out4, LOW);
+  // reset_motor1();
+  // set_motor2_forward();
 }
 
 
 void move_clockwaise(void)
 {
-  set_motor1_forward();
-  set_motor2_backward();
+  digitalWrite(pin_out5, LOW);
+  // set_motor1_forward();
+  // set_motor2_backward();
 }
 
 void move_counter_clockwaise(void)
 {
-  set_motor1_backward();
-  set_motor2_forward();
+  digitalWrite(pin_out6, LOW);
+  // set_motor1_backward();
+  // set_motor2_forward();
 }
 
 void move_fork_up(void)
 {
-  set_fork_up();
+  digitalWrite(pin_out7, LOW);
+  // set_fork_up();
 }
 
 void move_fork_down(void)
 {
-  set_fork_down();
+  digitalWrite(pin_out8, LOW);
+  // set_fork_down();
 }
 
 void move_fork_stop(void)
 {
-  reset_fork();
+  digitalWrite(pin_out7, HIGH);
+  digitalWrite(pin_out8, HIGH);
+  // reset_fork();
 }
 
 void honk_horn(void)
 {
-  digitalWrite(horn_pin, LOW);
+  digitalWrite(pin_out10, LOW);
+  // digitalWrite(horn_pin, LOW);
 } 
 
 void honk_NOT_horn(void)
 {
-  digitalWrite(horn_pin, HIGH);
+  digitalWrite(pin_out10, HIGH);
+  // digitalWrite(horn_pin, HIGH);
 } 
 
 void move_stop_all(void)
@@ -333,7 +376,7 @@ void setup()
   }
   
   LoRa.setFrequency(433000000);
-  LoRa.setSignalBandwidth(500000);
+  LoRa.setSignalBandwidth(100000);
   LoRa.setSpreadingFactor(8);
 
   LoRa.setGain(6);
@@ -367,28 +410,34 @@ void loop()
   }
   if(stat_flag == LED_on)
   {
-    
+    //LED status
+    stat_flag = LED_off;
+    blink(20, 2);
     //pars data and perform the corresponding command
     if(CHECK_IF("_FORWARD"))
     {
       Serial.println("_FORWARD");
-      reset_motors();
+      reset_move_forward();
     }
     else if(CHECK_IF("FORWARD"))
     {
       Serial.println("FORWARD");
-      move_forward();
+      char *ptr = strchr(received_packet,'='); ptr++; // find numbers
+      int value = 255 - atoi(ptr) * 2; // to obtain 0 to 255
+      move_forward(value);
     }
     
     if(CHECK_IF("_BACKWARD"))
     {
       Serial.println("_BACKWARD");
-      reset_motors();
+      reset_move_backward();
     }
     else if(CHECK_IF("BACKWARD"))
     {
       Serial.println("BACKWARD");
-      move_backward();
+      char *ptr = strchr(received_packet,'='); ptr++; // find numbers
+      int value = atoi(ptr) * 2; // to obtain 0 to 255
+      move_backward(value);
     }
 
     if(CHECK_IF("_UP"))
@@ -484,10 +533,6 @@ void loop()
       Serial.println("STOP");
       move_stop_all();
     }
-
-    //LED status
-    stat_flag = LED_off;
-    blink(20, 2);
   }
 }
 
