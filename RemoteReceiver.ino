@@ -259,11 +259,15 @@ void move_right(void)
   // set_motor1_forward();
 }
 
-void move_left(void)
+void reset_move_right(void)
 {
-  digitalWrite(pin_out4, LOW);
-  // reset_motor1();
-  // set_motor2_forward();
+  digitalWrite(pin_out3, HIGH);
+}
+
+
+void reset_move_left(void)
+{
+  digitalWrite(pin_out4, HIGH);
 }
 
 
@@ -423,7 +427,7 @@ void loop()
     {
       Serial.println("FORWARD");
       char *ptr = strchr(received_packet,'='); ptr++; // find numbers
-      int value = 255 - atoi(ptr) * 2; // to obtain 0 to 255
+      int value = 255 - (atoi(ptr) - 20) * 2; // to obtain 0 to 255
       move_forward(value);
     }
     
@@ -436,7 +440,7 @@ void loop()
     {
       Serial.println("BACKWARD");
       char *ptr = strchr(received_packet,'='); ptr++; // find numbers
-      int value = atoi(ptr) * 2; // to obtain 0 to 255
+      int value = (atoi(ptr) - 127 + 20) * 2; // to obtain 0 to 255
       move_backward(value);
     }
 
@@ -466,7 +470,7 @@ void loop()
     if(CHECK_IF("_RIGHT"))
     {
       Serial.println("_RIGHT");
-      reset_motors();
+      reset_move_right();
     }
     else if(CHECK_IF("RIGHT"))
     {
@@ -478,7 +482,7 @@ void loop()
     if(CHECK_IF("_LEFT"))
     {
       Serial.println("_LEFT");
-      reset_motors();
+      reset_move_left();
     }
     else if(CHECK_IF("LEFT"))
     {
