@@ -13,37 +13,40 @@
 #define pin_D0        2
 
 //define some output
+                     
+#define pin_out1      28    //
+#define pin_out2      26    // 
+#define pin_out3      24    //
+#define pin_out4      22    //
+#define pin_out5      21    // 
+#define pin_out6      20    //
+#define pin_out7      19    //
+#define pin_out8      18    //
+#define pin_out9      17    //Forks Lift
+#define pin_out10     16    //Forks Lower
+#define pin_out11     15    //Backward Active
+//#define pin_out12      19    //
+//#define pin_out13      18    //
+//#define pin_out14      17    //
+//#define pin_out15      16    //
+#define pin_out16     38    //
+#define pin_outANL    4
 
-                      
-#define pin_out1      28
-#define pin_out2      26
-#define pin_out3      24
-#define pin_out4      22
-#define pin_out5      21
-#define pin_out6      20
-#define pin_out7      19
-#define pin_out8      18
-#define pin_out9      17
-#define pin_out10     16
-#define pin_out11     15
-#define pin_outANL    44
+////declare outputs
+//#define motor1_l_u            pin_out1        //motor1 left up 
+//#define motor1_l_d            pin_out2        //motor1 left down
+//#define motor1_r_u            pin_out3        //motor1 right up 
+//#define motor1_r_d            pin_out4        //motor1 right down
+//
+//#define motor2_l_u            pin_out5        //motor2 left up 
+//#define motor2_l_d            pin_out6        //motor2 left down
+//#define motor2_r_u            pin_out7        //motor2 right up 
+//#define motor2_r_d            pin_out8        //motor2 right down
 
+#define fork_lift             pin_out9        //Forks Lift 
+#define fork_lower            pin_out10       //Forks Lower
 
-//declare outputs
-#define motor1_l_u            pin_out1        //motor1 left up 
-#define motor1_l_d            pin_out2        //motor1 left down
-#define motor1_r_u            pin_out3        //motor1 right up 
-#define motor1_r_d            pin_out4        //motor1 right down
-
-#define motor2_l_u            pin_out5        //motor2 left up 
-#define motor2_l_d            pin_out6        //motor2 left down
-#define motor2_r_u            pin_out7        //motor2 right up 
-#define motor2_r_d            pin_out8        //motor2 right down
-
-#define motor_fork_up         pin_out9        //motor2 right up 
-#define motor_fork_down       pin_out10       //motor2 right down
-
-#define horn_pin              pin_out11       //horn
+#define horn_pin              pin_out16       //horn
 
 #define CHECK_IF(str)         strstr(received_packet, str)
 
@@ -121,80 +124,81 @@ void blink (uint32_t del, uint32_t times)
     delay(del);
   }
 }
+//*************************************************************
+//static inline void set_motor1_forward(void)
+//{
+//  digitalWrite(motor1_l_u, HIGH);
+//  digitalWrite(motor1_r_d, HIGH);
+//
+//  digitalWrite(motor1_l_d, LOW);
+//  digitalWrite(motor1_r_u, LOW);
+//}
 
-static inline void set_motor1_forward(void)
-{
-  digitalWrite(motor1_l_u, HIGH);
-  digitalWrite(motor1_r_d, HIGH);
+//static inline void set_motor2_forward(void)
+//{
+//  digitalWrite(motor2_l_d, HIGH);
+//  digitalWrite(motor2_r_u, HIGH);
+//  
+//  digitalWrite(motor2_r_d, LOW);
+//  digitalWrite(motor2_l_u, LOW);
+//}
 
-  digitalWrite(motor1_l_d, LOW);
-  digitalWrite(motor1_r_u, LOW);
-}
+//**************************************************************
+//static inline void set_motor1_backward(void)
+//{
+//  digitalWrite(motor1_l_d, HIGH);
+//  digitalWrite(motor1_r_u, HIGH);
+//  
+//  digitalWrite(motor1_r_d, LOW);
+//  digitalWrite(motor1_l_u, LOW);
+//}
 
-static inline void set_motor2_forward(void)
-{
-  digitalWrite(motor2_l_d, HIGH);
-  digitalWrite(motor2_r_u, HIGH);
-  
-  digitalWrite(motor2_r_d, LOW);
-  digitalWrite(motor2_l_u, LOW);
-}
+//static inline void set_motor2_backward(void)
+//{
+//  digitalWrite(motor2_l_u, HIGH);
+//  digitalWrite(motor2_r_d, HIGH);
+//
+//  digitalWrite(motor2_l_d, LOW);
+//  digitalWrite(motor2_r_u, LOW);
+//}
 
-
-static inline void set_motor1_backward(void)
-{
-  digitalWrite(motor1_l_d, HIGH);
-  digitalWrite(motor1_r_u, HIGH);
-  
-  digitalWrite(motor1_r_d, LOW);
-  digitalWrite(motor1_l_u, LOW);
-}
-
-static inline void set_motor2_backward(void)
-{
-  digitalWrite(motor2_l_u, HIGH);
-  digitalWrite(motor2_r_d, HIGH);
-
-  digitalWrite(motor2_l_d, LOW);
-  digitalWrite(motor2_r_u, LOW);
-}
-
-
+//****************** Lift & Downer Forks ********
 static inline void set_fork_up(void)
 {
-  digitalWrite(motor_fork_up, LOW);
+  digitalWrite(fork_lift, LOW);
 }
 
 static inline void set_fork_down(void)
 {
-  digitalWrite(motor_fork_down, LOW);
+  digitalWrite(fork_lower, LOW);
 }
 
 
 static inline void reset_fork(void)
 {
-  digitalWrite(motor_fork_up, HIGH);
-  digitalWrite(motor_fork_down, HIGH);
+  digitalWrite(fork_lift, HIGH);
+  digitalWrite(fork_lower, HIGH);
 }
+//***********************************************
+//
+//static inline void reset_motor1(void)
+//{
+//  digitalWrite(motor1_l_u, HIGH);
+//  digitalWrite(motor1_r_d, HIGH);
+//
+//  digitalWrite(motor1_l_d, HIGH);
+//  digitalWrite(motor1_r_u, HIGH);
+//}
 
-static inline void reset_motor1(void)
-{
-  digitalWrite(motor1_l_u, HIGH);
-  digitalWrite(motor1_r_d, HIGH);
-
-  digitalWrite(motor1_l_d, HIGH);
-  digitalWrite(motor1_r_u, HIGH);
-}
-
-static inline void reset_motor2(void)
-{
-  digitalWrite(motor2_l_d, HIGH);
-  digitalWrite(motor2_r_u, HIGH);
-  
-  digitalWrite(motor2_r_d, HIGH);
-  digitalWrite(motor2_l_u, HIGH);
-}
-
+//static inline void reset_motor2(void)
+//{
+//  digitalWrite(motor2_l_d, HIGH);
+//  digitalWrite(motor2_r_u, HIGH);
+//  
+//  digitalWrite(motor2_r_d, HIGH);
+//  digitalWrite(motor2_l_u, HIGH);
+//}
+//***********************************************
 void reset_motors(void)
 {
   // digitalWrite(motor2_l_d, HIGH);
@@ -215,12 +219,33 @@ void reset_motors(void)
   digitalWrite(pin_out6, HIGH);
   digitalWrite(pin_out7, HIGH);
   digitalWrite(pin_out8, HIGH);
+  digitalWrite(pin_out11, HIGH);
+  digitalWrite(pin_outANL, LOW);
 }
 
+//************** Back & Forth *************************
+//*****************************************************
+//void move_forward(void)
+//{
+//  digitalWrite(pin_out1, LOW);
+//  digitalWrite(pin_out11, LOW);
+//  // set_motor1_forward();
+//  // set_motor2_forward();
+//}
+//
+//void move_backward(void)
+//{
+//  digitalWrite(pin_out2, LOW);
+//  digitalWrite(pin_out1, LOW);
+//  digitalWrite(pin_out11, LOW);
+//  // set_motor1_backward();
+//  // set_motor2_backward();
+//}
 
 void move_forward(uint8_t analoge_value)
 {
-  digitalWrite(pin_out1, LOW); // activation coil enable
+  digitalWrite(pin_out1, LOW);             // activation coil enable
+  digitalWrite(pin_out11, LOW);            // analogue relay enable
   analogWrite(pin_outANL, analoge_value);
   // set_motor1_forward();
   // set_motor2_forward();
@@ -229,6 +254,7 @@ void move_forward(uint8_t analoge_value)
 void reset_move_forward(void)
 {
   digitalWrite(pin_out1, HIGH); // activation coil disable
+  digitalWrite(pin_out11, HIGH); // analogue relay disable
   analogWrite(pin_outANL, 0);
   // set_motor1_forward();
   // set_motor2_forward();
@@ -237,7 +263,8 @@ void reset_move_forward(void)
 void move_backward(uint8_t analoge_value)
 {
   digitalWrite(pin_out2, LOW); // safety pin activation
-  digitalWrite(pin_out1, LOW); // activation coil enable
+  //digitalWrite(pin_out1, LOW); // activation coil enable
+  digitalWrite(pin_out11, LOW); // analogue relay enable
   analogWrite(pin_outANL, analoge_value);
   // set_motor1_backward();
   // set_motor2_backward();
@@ -246,54 +273,60 @@ void move_backward(uint8_t analoge_value)
 void reset_move_backward(void)
 {
   digitalWrite(pin_out2, HIGH); // safety pin deactivation
-  digitalWrite(pin_out1, HIGH); // activation coil disable
+  //digitalWrite(pin_out1, HIGH); // activation coil disable
+  digitalWrite(pin_out11, HIGH); // analogue relay disable
   analogWrite(pin_outANL, 0);
   // set_motor1_backward();
   // set_motor2_backward();
 }
 
+
+//*****************************************************
+//******************** TURN RIGHT *********************
 void move_right(void)
 {
-  digitalWrite(pin_out3, LOW);
+  digitalWrite(pin_out5, HIGH);  // Pin 20+
+  digitalWrite(pin_out6, HIGH);  // Pin 21-
+  digitalWrite(pin_out3, LOW);  // Pin 24+
+  digitalWrite(pin_out4, LOW);  // Pin 22-
   // reset_motor2();
   // set_motor1_forward();
 }
-
-void reset_move_right(void)
+//******************** TURN LEFT **********************
+void move_left(void)
 {
-  digitalWrite(pin_out3, HIGH);
-}
-
-
-void reset_move_left(void)
-{
-  digitalWrite(pin_out4, HIGH);
-}
-
-
-void move_clockwaise(void)
-{
-  digitalWrite(pin_out5, LOW);
-  // set_motor1_forward();
-  // set_motor2_backward();
-}
-
-void move_counter_clockwaise(void)
-{
-  digitalWrite(pin_out6, LOW);
-  // set_motor1_backward();
+  digitalWrite(pin_out3, HIGH);  // Pin 24+
+  digitalWrite(pin_out4, HIGH);  // Pin 22-
+  digitalWrite(pin_out5, LOW);  // Pin 20+
+  digitalWrite(pin_out6, LOW);  // Pin 21-
+  // reset_motor1();
   // set_motor2_forward();
 }
+//***********************************************************
 
+//void move_clockwaise(void)
+//{
+//  digitalWrite(pin_out5, LOW);
+//  // set_motor1_forward();
+//  // set_motor2_backward();
+//}
+//
+//void move_counter_clockwaise(void)
+//{
+//  digitalWrite(pin_out6, LOW);
+//  // set_motor1_backward();
+//  // set_motor2_forward();
+//}
+//***********************************************************
 void move_fork_up(void)
 {
-  digitalWrite(pin_out7, LOW);
+  digitalWrite(pin_out9, LOW);
   // set_fork_up();
 }
 
 void move_fork_down(void)
 {
-  digitalWrite(pin_out8, LOW);
+  digitalWrite(pin_out10, LOW);
   // set_fork_down();
 }
 
@@ -303,18 +336,19 @@ void move_fork_stop(void)
   digitalWrite(pin_out8, HIGH);
   // reset_fork();
 }
-
+//*********************** HORN *****************************
 void honk_horn(void)
 {
-  digitalWrite(pin_out10, LOW);
-  // digitalWrite(horn_pin, LOW);
+  //digitalWrite(pin_out10, LOW);
+   digitalWrite(horn_pin, LOW);
 } 
 
 void honk_NOT_horn(void)
 {
-  digitalWrite(pin_out10, HIGH);
-  // digitalWrite(horn_pin, HIGH);
+  //digitalWrite(pin_out10, HIGH);
+   digitalWrite(horn_pin, HIGH);
 } 
+//*****************************************************
 
 void move_stop_all(void)
 {
@@ -323,13 +357,8 @@ void move_stop_all(void)
   reset_fork();
 } 
 
-
-
-
-
-
-
 /*************Initializations*************/
+
 void setup() 
 {
   pinMode(LED_BUILTIN, OUTPUT);
@@ -345,7 +374,9 @@ void setup()
   pinMode(pin_out9, OUTPUT);
   pinMode(pin_out10, OUTPUT);
   pinMode(pin_out11, OUTPUT);
-
+  pinMode(pin_out16, OUTPUT);
+//  pinMode(pin_out17, OUTPUT);
+//  pinMode(pin_out18, OUTPUT);
 
 
 
@@ -360,7 +391,9 @@ void setup()
   digitalWrite(pin_out9, HIGH);
   digitalWrite(pin_out10, HIGH);
   digitalWrite(pin_out11, HIGH);
-
+  digitalWrite(pin_out16, HIGH);
+ // digitalWrite(pin_out17, HIGH);
+ // digitalWrite(pin_out18, HIGH);
   
   //it's mandatory to configure pins before start
   LoRa.setPins(pin_CE, pin_RST, pin_D0);
@@ -395,7 +428,7 @@ void setup()
   delay(300);
 }
 
-
+//************************ MAIN LOOP **************************
 void loop()
 {
   delay(1);
@@ -421,29 +454,32 @@ void loop()
     if(CHECK_IF("_FORWARD"))
     {
       Serial.println("_FORWARD");
-      reset_move_forward();
+      reset_motors();
     }
     else if(CHECK_IF("FORWARD"))
     {
       Serial.println("FORWARD");
+      //move_forward();
       char *ptr = strchr(received_packet,'='); ptr++; // find numbers
-      int value = 255 - (atoi(ptr) - 20) * 2; // to obtain 0 to 255
+      int value = 255 - atoi(ptr) * 2; // to obtain 0 to 255
       move_forward(value);
     }
-    
+//********************************************************************    
     if(CHECK_IF("_BACKWARD"))
     {
       Serial.println("_BACKWARD");
-      reset_move_backward();
+      reset_motors();
     }
     else if(CHECK_IF("BACKWARD"))
     {
       Serial.println("BACKWARD");
+     // move_backward();
+      
       char *ptr = strchr(received_packet,'='); ptr++; // find numbers
-      int value = (atoi(ptr) - 127 + 20) * 2; // to obtain 0 to 255
+      int value = atoi(ptr) * 2; // to obtain 0 to 255
       move_backward(value);
     }
-
+//********************************************************************
     if(CHECK_IF("_UP"))
     {
       Serial.println("_UP");
@@ -470,7 +506,7 @@ void loop()
     if(CHECK_IF("_RIGHT"))
     {
       Serial.println("_RIGHT");
-      reset_move_right();
+      reset_motors();
     }
     else if(CHECK_IF("RIGHT"))
     {
@@ -482,7 +518,7 @@ void loop()
     if(CHECK_IF("_LEFT"))
     {
       Serial.println("_LEFT");
-      reset_move_left();
+      reset_motors();
     }
     else if(CHECK_IF("LEFT"))
     {
@@ -502,29 +538,29 @@ void loop()
       honk_horn();
     }
 
-    //clockwise rotation
-    if(CHECK_IF("_ROT_CLW"))
-    {
-      Serial.println("_ROT_CLW");
-      reset_motors();
-    }
-    else if(CHECK_IF("ROT_CLW"))
-    {
-      Serial.println("ROT_CLW");
-      move_clockwaise();
-    }
-
-    //counter clockwise rotation
-    if(CHECK_IF("_ROT_CCW"))
-    {
-      Serial.println("_ROT_CCW");
-      reset_motors();
-    }
-    else if(CHECK_IF("ROT_CCW"))
-    {
-      Serial.println("ROT_CCW");
-      move_counter_clockwaise();
-    }
+//    //clockwise rotation
+//    if(CHECK_IF("_ROT_CLW"))
+//    {
+//      Serial.println("_ROT_CLW");
+//      reset_motors();
+//    }
+//    else if(CHECK_IF("ROT_CLW"))
+//    {
+//      Serial.println("ROT_CLW");
+//      move_clockwaise();
+//    }
+//
+//    //counter clockwise rotation
+//    if(CHECK_IF("_ROT_CCW"))
+//    {
+//      Serial.println("_ROT_CCW");
+//      reset_motors();
+//    }
+//    else if(CHECK_IF("ROT_CCW"))
+//    {
+//      Serial.println("ROT_CCW");
+//      move_counter_clockwaise();
+//    }
 
     //stop button
     if(CHECK_IF("_STOP"))
@@ -539,9 +575,3 @@ void loop()
     }
   }
 }
-
-
-
-
-
-
